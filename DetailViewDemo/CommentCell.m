@@ -20,6 +20,7 @@ const CGFloat kCommentPaddingFromRight = 8.0f;
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        NSLog(@"init table cell");
         self.backgroundColor = [UIColor whiteColor];
         self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 35, 35)];
         // Go Toronto!

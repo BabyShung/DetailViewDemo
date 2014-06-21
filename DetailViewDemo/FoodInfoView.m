@@ -1,48 +1,18 @@
 //
-//  ViewController.m
+//  FoodInfoView.m
 //  DetailViewDemo
 //
-//  Created by Hao Zheng on 6/16/14.
+//  Created by Hao Zheng on 6/21/14.
 //  Copyright (c) 2014 Hao Zheng. All rights reserved.
 //
 
-#import "ViewController.h"
-#import "EDImageFlowLayout.h"
+#import "FoodInfoView.h"
 #import "EDImageCell.h"
+#import "JTSImageViewController.h"
+#import "JTSImageInfo.h"
 #import "UIImageView+M13AsynchronousImageView.h"
-#import "RQShineLabel.h"
-#import "TagView.h"
 #import "CommentCell.h"
-#import "FBShimmering.h"
-#import "FBShimmeringView.h"
 
-
-
-@interface ViewController () <UICollectionViewDataSource,UICollectionViewDelegate,TagViewDelegate,UITableViewDataSource, UITableViewDelegate>
-{
-    NSMutableArray *externalFileURLs;
-}
-
-@property (nonatomic, strong) TagView *tagview;
-
-@property (strong,nonatomic) UILabel *titleLabel;
-@property (strong,nonatomic) UILabel *translateLabel;
-@property (strong,nonatomic) FBShimmeringView *shimmeringView;
-
-@property (strong,nonatomic) UIScrollView *scrollview;
-
-@property (nonatomic, strong) EDImageFlowLayout *circleLayout;
-
-@property (strong, nonatomic) UICollectionView *myCollectionView;
-
-@property (strong, nonatomic) RQShineLabel *descriptionLabel;
-@property (strong, nonatomic) NSArray *textArray;
-
-@property (strong,nonatomic) UIView *commentsViewContainer;
-@property (strong,nonatomic) UITableView *commentsTableView;
-@property (strong,nonatomic) NSMutableArray *comments;
-
-@end
 
 static NSString *CellIdentifier = @"Cell";
 
@@ -52,19 +22,41 @@ const CGFloat CLeftMargin = 15.0f;
 const CGFloat TitleTopMargin = 10.0f;
 const CGFloat GAP = 6.0f;
 const CGFloat MiddleGAP = 20.0f;
-@implementation ViewController
 
-- (void)viewDidLoad
+@interface FoodInfoView () <UICollectionViewDataSource,UICollectionViewDelegate,TagViewDelegate,UITableViewDataSource, UITableViewDelegate>
 {
-    [super viewDidLoad];
-	
-    self.scrollview=[[UIScrollView alloc]initWithFrame:self.view.bounds];
+    NSMutableArray *externalFileURLs;
+}
+
+@property (strong,nonatomic) UIViewController *currentVC;
+
+
+@end
+
+@implementation FoodInfoView
+
+- (id)initWithFrame:(CGRect)frame andVC:(UIViewController *)vc
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        self.currentVC = vc;
+        
+        //init all UI controls
+        [self loadControls];
+        
+    }
+    return self;
+}
+
+-(void)loadControls{
+    self.scrollview=[[UIScrollView alloc]initWithFrame:self.bounds];
     self.scrollview.showsVerticalScrollIndicator=YES;
     self.scrollview.scrollEnabled=YES;
     self.scrollview.userInteractionEnabled=YES;
-    [self.view addSubview:self.scrollview];
+    [self addSubview:self.scrollview];
     //should add up all
-    self.scrollview.contentSize = CGSizeMake(self.view.bounds.size.width,1100);
+    self.scrollview.contentSize = CGSizeMake(self.bounds.size.width,1100);
     
     
     CGRect titleRect = CGRectMake(CLeftMargin, TitleTopMargin, self.scrollview.bounds.size.width, 30);
@@ -96,42 +88,38 @@ const CGFloat MiddleGAP = 20.0f;
     self.translateLabel.backgroundColor = [UIColor clearColor];
     [self.scrollview addSubview:self.translateLabel];
     //_shimmeringView.contentView = self.translateLabel;
-
     
     
-    self.descriptionLabel = ({
-        RQShineLabel *label = [[RQShineLabel alloc] initWithFrame:CGRectMake(CLeftMargin, CGRectGetHeight(self.titleLabel.frame)+ CGRectGetMaxY(self.titleLabel.frame) + MiddleGAP, 320 - CLeftMargin*2, 70)];
-        label.numberOfLines = 0;
-        label.text = @"蓝芝士是一种听上去很好吃但是味道很恶心的芝士。";
-        label.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0];
-        label.backgroundColor = [UIColor clearColor];
-        [label sizeToFit];
-        //label.center = self.view.center;
-        label.textColor = [UIColor grayColor];
-        label;
-    });
+    
+    self.descriptionLabel = [[RQShineLabel alloc] initWithFrame:CGRectMake(CLeftMargin, CGRectGetHeight(self.titleLabel.frame)+ CGRectGetMaxY(self.titleLabel.frame) + MiddleGAP, 320 - CLeftMargin*2, 70)];
+    self.descriptionLabel.numberOfLines = 0;
+    self.descriptionLabel.text = @"";
+    self.descriptionLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0];
+    self.descriptionLabel.backgroundColor = [UIColor clearColor];
+    //self.descriptionLabel.hidden = YES;
+    //label.center = self.view.center;
+    //self.descriptionLabel.textColor = [UIColor grayColor];
+    
     [self.scrollview addSubview:self.descriptionLabel];
     
     
-    _tagview = [[TagView alloc]initWithFrame:CGRectMake(0, 20+CGRectGetMaxY(self.descriptionLabel.frame) , CGRectGetWidth(self.view.bounds), 40)];
+    _tagview = [[TagView alloc]initWithFrame:CGRectMake(0, 20+CGRectGetMaxY(self.descriptionLabel.frame) , CGRectGetWidth(self.bounds), 40)];
     _tagview.allowToUseSingleSpace = YES;
     _tagview.delegate = self;
     [_tagview setFont:[UIFont fontWithName:@"Heiti TC" size:18]];
     [_tagview setBackgroundColor:[UIColor clearColor]];
-    [_tagview addTags:@[@"hello", @"UX",@"Edible",@"Blue Cheese", @"congratulation", @"Blue Cheese", @"congratulation", @"google", @"ios", @"android"]];
     [self.scrollview addSubview:_tagview];
     
     
     //collectionView + layout
     EDImageFlowLayout *small = [[EDImageFlowLayout alloc]init];
     
-    self.myCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tagview.frame) + GAP, CGRectGetWidth(self.view.bounds), 268) collectionViewLayout:small];
-    [self.myCollectionView registerClass:[EDImageCell class] forCellWithReuseIdentifier:CellIdentifier];
-    self.myCollectionView.backgroundColor = [UIColor clearColor];
-    self.myCollectionView.delegate = self;
-    self.myCollectionView.dataSource = self;
-    [self.myCollectionView setShowsHorizontalScrollIndicator:NO];
-    [self.scrollview addSubview:self.myCollectionView];
+    self.photoCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(self.tagview.frame) + GAP, CGRectGetWidth(self.bounds), 268) collectionViewLayout:small];
+    [self.photoCollectionView registerClass:[EDImageCell class] forCellWithReuseIdentifier:CellIdentifier];
+    self.photoCollectionView.backgroundColor = [UIColor clearColor];
+    
+    [self.photoCollectionView setShowsHorizontalScrollIndicator:NO];
+    [self.scrollview addSubview:self.photoCollectionView];
     
     //init all the image paras
     externalFileURLs = [NSMutableArray array];
@@ -147,13 +135,12 @@ const CGFloat MiddleGAP = 20.0f;
     
     //add table view
     //----------------------------comment
-    _commentsViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.myCollectionView.frame) + GAP, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) )];
+    _commentsViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.photoCollectionView.frame) + GAP, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) )];
     //[_commentsViewContainer addGradientMaskWithStartPoint:CGPointMake(0.5, 0.0) endPoint:CGPointMake(0.5, 0.03)];
     //************** pay attention to tableview *****************
-    _commentsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) ) style:UITableViewStylePlain];
+    _commentsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) ) style:UITableViewStylePlain];
     _commentsTableView.scrollEnabled = NO;
-    _commentsTableView.delegate = self;
-    _commentsTableView.dataSource = self;
+    
     _commentsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     _commentsTableView.separatorColor = [UIColor clearColor];
     
@@ -162,28 +149,27 @@ const CGFloat MiddleGAP = 20.0f;
     [self.scrollview addSubview:_commentsViewContainer];
     
     // Let's put in some fake data!
-    _comments = [@[@"Oh my god! Me too!", @"No way! Spur won!", @"I happened to be one of the coolest guy to learn this shit!", @"More comments", @"Go Toronto Blue Jays!", @"I rather stay home", @"I don't get what you are saying", @"I don't have an iPhone", @"How are you using this then?"] mutableCopy];
-    
+    _comments = [@[@"Oh my god! Me too!", @"I happened to be one of the coolest guy to learn this shit!", @"More comments", @"Go Toronto Blue Jays!", @"I rather stay home", @"I don't get what you are saying", @"I don't have an iPhone"] mutableCopy];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    // Adjust photo collectionview decelerationRate
-    self.myCollectionView.decelerationRate =  UIScrollViewDecelerationRateFast;
-    
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
+-(void)configureNetworkComponents{
+    NSLog(@"test```");
+    self.photoCollectionView.delegate = self;
+    self.photoCollectionView.dataSource = self;
+    _commentsTableView.delegate = self;
+    _commentsTableView.dataSource = self;
+    [_commentsTableView reloadData];
     
-    //let shine label shine
+    [_tagview addTags:@[@"蓝色", @"臭",@"酸",@"软", @"难消化",@"高热量",@"发酵品"]];
+    
+    self.descriptionLabel.text = @"蓝芝士是一种听上去很好吃但是味道很恶心的芝士。";
+    
+    [self.descriptionLabel sizeToFit];
     [self.descriptionLabel shine];
     
-    //************ after loading, must reset the contentsize for scrollview *************
-    //_mainScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.frame), _commentsTableView.contentSize.height + CGRectGetHeight(_backgroundScrollView.frame));
+    
+    NSLog(@"visible %d",self.descriptionLabel.isVisible);
 }
 
 /**********************************
@@ -214,18 +200,31 @@ const CGFloat MiddleGAP = 20.0f;
         [cell.activityView stopAnimating];
         
         
-//        [UIView transitionWithView:cell.imageView
-//                          duration:0.6f
-//                           options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationCurveEaseInOut
-//                        animations:^{
-//                            cell.imageView.image = image;
-//                        } completion:nil];
-        
-        
-        
-        
     }];
     return cell;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    EDImageCell *cell = (EDImageCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    
+    // Create image info
+    JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
+    
+    imageInfo.image = cell.imageView.image;
+    
+    imageInfo.referenceRect = cell.imageView.frame;
+    
+    imageInfo.referenceView = cell.imageView.superview;
+    
+    // Setup view controller
+    JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
+                                           initWithImageInfo:imageInfo
+                                           mode:JTSImageViewControllerMode_Image
+                                           backgroundStyle:JTSImageViewControllerBackgroundStyle_ScaledDimmedBlurred];
+    
+    // Present the view controller.
+    [imageViewer showFromViewController:self.currentVC transition:JTSImageViewControllerTransition_FromOriginalPosition];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -249,12 +248,12 @@ const CGFloat MiddleGAP = 20.0f;
 #pragma mark - HKKTagWriteViewDelegate
 - (void)tagWriteView:(TagView *)view didMakeTag:(NSString *)tag
 {
-    NSLog(@"added tag = %@", tag);
+    //NSLog(@"added tag = %@", tag);
 }
 
 - (void)tagWriteView:(TagView *)view didRemoveTag:(NSString *)tag
 {
-    NSLog(@"removed tag = %@", tag);
+    //NSLog(@"removed tag = %@", tag);
 }
 
 
@@ -288,6 +287,7 @@ const CGFloat MiddleGAP = 20.0f;
     CommentCell *cell = [tableView dequeueReusableCellWithIdentifier:[NSString stringWithFormat:@"Cell %d", indexPath.row]];
     if (!cell) {
         cell = [[CommentCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[NSString stringWithFormat:@"Cell %d", indexPath.row]];
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.commentLabel.frame = (CGRect) {.origin = cell.commentLabel.frame.origin, .size = {CGRectGetMinX(cell.likeButton.frame) - CGRectGetMaxY(cell.iconView.frame) - kCommentPaddingFromLeft - kCommentPaddingFromRight,[self tableView:tableView heightForRowAtIndexPath:indexPath] - kCommentCellHeight}};
         cell.commentLabel.text = _comments[indexPath.row];
@@ -305,8 +305,5 @@ const CGFloat MiddleGAP = 20.0f;
 }
 
 
--(BOOL)prefersStatusBarHidden{
-    return YES;
-}
 
 @end

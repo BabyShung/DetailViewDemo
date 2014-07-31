@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC06CDBD1956068300BEB3F4 /* LoadControls.m in Sources */ = {isa = PBXBuildFile; fileRef = AC06CDBC1956068300BEB3F4 /* LoadControls.m */; };
 		B878EFE31955DA6200C43583 /* FoodInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = B878EFE21955DA6200C43583 /* FoodInfoView.m */; };
 		B8B0F42F1950884500BE6929 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B0F42E1950884500BE6929 /* CommentCell.m */; };
 		B8B0F4321950886500BE6929 /* like_greyIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = B8B0F4311950886500BE6929 /* like_greyIcon.png */; };
@@ -50,7 +51,6 @@
 		B8C21B8D194F827C0012B616 /* UIImageView+M13AsynchronousImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C21B8C194F827C0012B616 /* UIImageView+M13AsynchronousImageView.m */; };
 		B8C21B8F194F82FA0012B616 /* fullURLs.txt in Resources */ = {isa = PBXBuildFile; fileRef = B8C21B8E194F82FA0012B616 /* fullURLs.txt */; };
 		B8C21B94194F87150012B616 /* RQShineLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C21B93194F87150012B616 /* RQShineLabel.m */; };
-		B8C21B97194F87550012B616 /* LoadControls.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C21B96194F87550012B616 /* LoadControls.m */; };
 		B8C21B9C194F9C100012B616 /* btn_tag_delete.png in Resources */ = {isa = PBXBuildFile; fileRef = B8C21B99194F9C100012B616 /* btn_tag_delete.png */; };
 		B8C21B9D194F9C100012B616 /* TagView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C21B9B194F9C100012B616 /* TagView.m */; };
 /* End PBXBuildFile section */
@@ -66,6 +66,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AC06CDBB1956068300BEB3F4 /* LoadControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadControls.h; sourceTree = "<group>"; };
+		AC06CDBC1956068300BEB3F4 /* LoadControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadControls.m; sourceTree = "<group>"; };
 		B878EFE11955DA6200C43583 /* FoodInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoodInfoView.h; sourceTree = "<group>"; };
 		B878EFE21955DA6200C43583 /* FoodInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodInfoView.m; sourceTree = "<group>"; };
 		B8B0F42D1950884500BE6929 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentCell.h; sourceTree = "<group>"; };
@@ -131,8 +133,6 @@
 		B8C21B8E194F82FA0012B616 /* fullURLs.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fullURLs.txt; sourceTree = "<group>"; };
 		B8C21B92194F87150012B616 /* RQShineLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RQShineLabel.h; sourceTree = "<group>"; };
 		B8C21B93194F87150012B616 /* RQShineLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RQShineLabel.m; sourceTree = "<group>"; };
-		B8C21B95194F87550012B616 /* LoadControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadControls.h; sourceTree = "<group>"; };
-		B8C21B96194F87550012B616 /* LoadControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadControls.m; sourceTree = "<group>"; };
 		B8C21B99194F9C100012B616 /* btn_tag_delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_tag_delete.png; sourceTree = "<group>"; };
 		B8C21B9A194F9C100012B616 /* TagView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagView.h; sourceTree = "<group>"; };
 		B8C21B9B194F9C100012B616 /* TagView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagView.m; sourceTree = "<group>"; };
@@ -164,6 +164,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC06CDBE1956075100BEB3F4 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				AC06CDBB1956068300BEB3F4 /* LoadControls.h */,
+				AC06CDBC1956068300BEB3F4 /* LoadControls.m */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
 		B8B0F42C1950883600BE6929 /* CommentTableview */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,8 +277,7 @@
 		B8C21B56194F81A40012B616 /* DetailViewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				B8C21B95194F87550012B616 /* LoadControls.h */,
-				B8C21B96194F87550012B616 /* LoadControls.m */,
+				AC06CDBE1956075100BEB3F4 /* Utility */,
 				B8B0F4501951EF9900BE6929 /* S3 */,
 				B8B0F4481950E47E00BE6929 /* ShimmerLabel */,
 				B8B0F42C1950883600BE6929 /* CommentTableview */,
@@ -471,7 +479,6 @@
 				B8B0F46C195238D800BE6929 /* UIImage+JTSImageEffects.m in Sources */,
 				B8C21B61194F81A40012B616 /* AppDelegate.m in Sources */,
 				B8B0F46B195238D800BE6929 /* JTSAnimatedGIFUtility.m in Sources */,
-				B8C21B97194F87550012B616 /* LoadControls.m in Sources */,
 				B8B0F468195238D800BE6929 /* JTSImageViewController.m in Sources */,
 				B878EFE31955DA6200C43583 /* FoodInfoView.m in Sources */,
 				B8B0F469195238D800BE6929 /* JTSImageInfo.m in Sources */,
@@ -481,6 +488,7 @@
 				B8B0F44F1950E48900BE6929 /* FBShimmeringLayer.m in Sources */,
 				B8C21B5D194F81A40012B616 /* main.m in Sources */,
 				B8C21B8D194F827C0012B616 /* UIImageView+M13AsynchronousImageView.m in Sources */,
+				AC06CDBD1956068300BEB3F4 /* LoadControls.m in Sources */,
 				B8B0F447195088AA00BE6929 /* UIFont+SecretFont.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

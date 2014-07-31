@@ -152,7 +152,7 @@ const CGFloat MiddleGAP = 20.0f;
     _comments = [@[@"Oh my god! Me too!", @"I happened to be one of the coolest guy to learn this shit!", @"More comments", @"Go Toronto Blue Jays!", @"I rather stay home", @"I don't get what you are saying", @"I don't have an iPhone"] mutableCopy];
 }
 
-
+/*!!!!! Fist time display !!!!!*/
 -(void)configureNetworkComponents{
     NSLog(@"test```");
     self.photoCollectionView.delegate = self;
